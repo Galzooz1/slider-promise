@@ -6,8 +6,21 @@ const useApi = (endpoints: string[]) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
 
+  const flattenNestedArray = (arr: any[]): any[] | null => {
+    let result: any[] | null = null;
+  
+    arr.some(item => {      
+      if (Array.isArray(item)) {
+        result = [].concat(...arr);
+        return true;
+      }
+      return false;
+    });
+  
+    return result;
+  }
+
   const fetchData = useCallback(async() => {
-    console.log(endpoints);
     try {
       setLoading(true);
 
@@ -22,7 +35,7 @@ const useApi = (endpoints: string[]) => {
       );
 
       const results = await Promise.all(requests);
-      const flattenedArr = [].concat(...results);
+      const flattenedArr = flattenNestedArray(results);
       
       setData(flattenedArr);
     } catch (error) {

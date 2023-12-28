@@ -2,19 +2,29 @@ import React, { useState } from 'react';
 import { IData } from '../interfaces/data';
 import './slider.css';
 import Slide from './slide';
+import useSlider from '../hooks/useSlider';
 
 interface SliderProps {
     data: IData[] | undefined;
 };
 
 const Slider: React.FC<SliderProps> = ({ data }) => {
-    const [slide, setSlide] = useState(0);
+    const totalSlides: any = data ? data.length : null;
+    const {
+        currentSlide,
+        setCurrentSlide,
+        sliderRef,
+        handleMouseEnter,
+        handleMouseLeave
+    } = useSlider({ totalSlides, interval: 1000 });
+
 
     return (
-        <div className='slider'>
+        <div onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave} ref={sliderRef} className='slider'>
             {data?.map((item: IData, i) => {
                 return (
-                    <Slide slide={slide} item={item} index={i} />
+                    <Slide key={item.id} slide={currentSlide} item={item} index={i} />
                 )
             })}
             <span className="indicators">
@@ -23,9 +33,9 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
                         <button
                             key={i}
                             className={
-                                slide === i ? "indicator" : "indicator indicator-inactive"
+                                currentSlide === i ? "indicator" : "indicator indicator-inactive"
                             }
-                            onClick={() => setSlide(i)}
+                            onClick={() => setCurrentSlide(i)}
                         ></button>
                     );
                 })}

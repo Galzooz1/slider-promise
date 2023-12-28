@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-// import { IData } from '../interfaces/data';
+import React from 'react';
 import Slider from './slider';
-import useApi from '../services/apiService';
+import useApi from '../hooks/useApi';
 
 interface MainProps {
     
@@ -9,9 +8,9 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = () => {
     const apiUrls = [
-        // 'https://jsonplaceholder.typicode.com/todos/1',
-        // 'https://jsonplaceholder.typicode.com/todos/2',
-        // 'https://jsonplaceholder.typicode.com/todos/3',
+        'https://api.thedogapi.com/v1/images/search',
+        'https://api.thecatapi.com/v1/images/search',
+        'https://api.thedogapi.com/v1/images/search',
         'https://api.thecatapi.com/v1/images/search',
         'https://api.thedogapi.com/v1/images/search'
       ];
@@ -24,7 +23,8 @@ const Main: React.FC<MainProps> = () => {
       }
     
       if (error) {
-        return <p>Error: {error.message}</p>;
+        console.log(error);
+        return <p>There's a problem, Try again later.</p>;
       }
         
     return(
