@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { IData } from '../interfaces/data';
 
 const useApi = (endpoints: string[]) => {
-  const [data, setData] = useState<IData | undefined | any>();
+  const [data, setData] = useState<IData[] | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
 
@@ -35,7 +35,7 @@ const useApi = (endpoints: string[]) => {
       );
 
       const results = await Promise.all(requests);
-      const flattenedArr = flattenNestedArray(results);
+      const flattenedArr: any = flattenNestedArray(results);
       
       setData(flattenedArr);
     } catch (error) {

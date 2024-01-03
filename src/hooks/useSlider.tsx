@@ -1,51 +1,75 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import useSliderNavigation from './useSliderNavigation';
+import React, { useEffect, useState } from "react";
 
 interface UseSliderProps {
-    totalSlides: any;
-    interval: number; // Time interval in milliseconds
-};
+  sliderLength: number | undefined;
+  intervalMilliseconds: number; // Time interval in milliseconds
+}
 
 interface UseSliderReturn {
-    currentSlide: number;
-    setCurrentSlide: any
-    sliderRef: React.RefObject<HTMLDivElement>;
-    handleMouseEnter: (e: React.MouseEvent) => void;
-    handleMouseLeave: (e: React.MouseEvent) => void;
+  currentSlide: number;
+  setCurrentSlide: any;
+  handleMouseEnter: (e: React.MouseEvent) => void;
+  handleMouseLeave: (e: React.MouseEvent) => void;
+  transformStyle: string;
+  setTransformStyle: any;
+  widthSpan: number;
 }
 
-const useSlider = ({ totalSlides, interval }: UseSliderProps): UseSliderReturn => {
+const widthSpan = 100.1;
 
-    //Automated Slider
-    const { currentSlide, goToNextSlide, goToPrevSlide, setCurrentSlide } = useSliderNavigation(totalSlides);
-    const [isAutoLooping, setAutoLooping] = useState(true);
-    const sliderRef = useRef(null);
+const useSlider = ({
+  sliderLength,
+  intervalMilliseconds,
+}: UseSliderProps): UseSliderReturn => {
 
-    useEffect(() => {
-        const intervalId = isAutoLooping ? setInterval(goToNextSlide, interval) : undefined;
+  //Handle Slides
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [transformStyle, setTransformStyle] = useState<string>(`translateX(0%)`);
 
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [goToNextSlide, interval]);
+  const goToNextSlide = () => {
+    let toTranslate = widthSpan * (currentSlide + 1);
+    console.log(toTranslate);
+    setTransformStyle(`translateX(-${toTranslate}00%)`)
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % sliderLength);
+  };
 
-    
-    //Pause loop when mouse enter
-    const handleMouseEnter = () => {
-        setAutoLooping(false);
-      };
-    
-      const handleMouseLeave = () => {
-        setAutoLooping(true);
-      };
+  const goToPrevSlide = () => {
+    let toTranslate = -widthSpan * currentSlide;
+    setTransformStyle(`translateX(-${toTranslate}00%)`)
+    setCurrentSlide((prevSlide) => (prevSlide - 1 + sliderLength) % sliderLength);
+  };
 
-    return {
-        currentSlide,
-        setCurrentSlide,
-        sliderRef,
-        handleMouseEnter,
-        handleMouseLeave
-    }
-}
+  //Automated Slider
+  const [isAutoLooping, setAutoLooping] = useState(true);
+
+  useEffect(() => {
+    const intervalId = isAutoLooping
+      ? setInterval(goToNextSlide, intervalMilliseconds)
+      : undefined;
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [goToNextSlide, intervalMilliseconds, currentSlide, transformStyle]);
+
+  //Pause loop when mouse enter
+  const handleMouseEnter = () => {
+    setAutoLooping(false);
+  };
+
+  const handleMouseLeave = () => {
+    setAutoLooping(true);
+  };
+
+  return {
+    currentSlide,
+    setCurrentSlide,
+    handleMouseEnter,
+    handleMouseLeave,
+    transformStyle,
+    setTransformStyle,
+    widthSpan
+  };
+};
 
 export default useSlider;
