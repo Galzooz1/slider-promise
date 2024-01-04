@@ -1,0 +1,143 @@
+/* 
+  .arrow {
+    position: absolute;
+    filter: drop-shadow(0px 0px 5px #555);
+    width: 2rem;
+    height: 2rem;
+    color: white;
+  }
+  
+  .arrow:hover {
+    cursor: pointer;
+  }
+  
+  .arrow-left {
+    left: 1rem;
+  }
+  
+  .arrow-right {
+    right: 1rem;
+  } */
+  
+  /* Slider.css */
+.sliderContainer {
+  position: relative;
+  /* width: 100%; */
+  width: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100%; */
+  /* margin: 0 auto; */
+  background-color: #eaebec;
+  overflow: hidden;
+}
+
+.slider {
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: all 500ms linear;
+  
+}
+
+.slide {
+  transition: all 500ms linear;
+  touch-action: none;
+  min-height: 100%;
+  min-width: 100%;
+  opacity: 0;
+}
+
+.slide img {
+  height: 100%;
+  min-width: 100%;
+  background-color: none;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+
+  .indicators {
+    display: flex;
+    position: absolute;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .indicator {
+    background-color: white;
+    height: 1rem;
+    width: 1rem;
+    border-radius: 100%;
+    border: none;
+    outline: none;
+    box-shadow: 0px 0px 5px #555;
+    margin: 0 0.2rem;
+    cursor: pointer;
+  }
+  
+  .indicatorInactive {
+    background-color: #555;
+  }
+
+  .LeftArrow {
+    position: absolute;
+    left: 1%;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: xx-large;
+    color: #aabbcc;
+    user-select: none;
+    z-index: 2;
+}
+
+.LeftArrow:hover {
+  color: #bbccdd;
+}
+
+.LeftArrow:active {
+  color: #206ebd;
+}
+
+.RightArrow {
+  position: absolute;
+  right: 1%;
+  padding-left: 2px;
+  padding-right: 2px;
+  font-size: xx-large;
+  color: #aabbcc;
+  user-select: none;
+  z-index: 2;
+}
+
+.RightArrow:hover {
+  color: #bbccdd
+}
+
+.RightArrow:active {
+  color: #206ebd
+}
+
+
+/* @media screen and (max-width: 1024px) {
+  .slider img {
+    width: 300px;
+    height: 300px;
+  }
+} */
+
+/* @media screen and (max-width: 480px) {
+  .slider img {
+    width: 200px;
+    height: 200px;
+  }
+}  */

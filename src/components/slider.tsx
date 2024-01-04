@@ -1,47 +1,94 @@
-import React, { useState } from 'react';
-import { IData } from '../interfaces/data';
-import './slider.css';
-import Slide from './slide';
-import useSlider from '../hooks/useSlider';
+import React, { Children, ReactNode } from "react";
+import classes from "./slider.module.css";
+import useSlider from "../hooks/useSlider";
 
 interface SliderProps {
-    data: IData[] | undefined;
-};
-
-const Slider: React.FC<SliderProps> = ({ data }) => {
-    const totalSlides: any = data ? data.length : null;
-    const {
-        currentSlide,
-        setCurrentSlide,
-        sliderRef,
-        handleMouseEnter,
-        handleMouseLeave
-    } = useSlider({ totalSlides, interval: 1000 });
-
-
-    return (
-        <div onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave} ref={sliderRef} className='slider'>
-            {data?.map((item: IData, i) => {
-                return (
-                    <Slide key={item.id} slide={currentSlide} item={item} index={i} />
-                )
-            })}
-            <span className="indicators">
-                {data?.map((_, i) => {
-                    return (
-                        <button
-                            key={i}
-                            className={
-                                currentSlide === i ? "indicator" : "indicator indicator-inactive"
-                            }
-                            onClick={() => setCurrentSlide(i)}
-                        ></button>
-                    );
-                })}
-            </span>
-        </div>
-    )
+  children: ReactNode;
+  sliderLength?: number;
+  width?: number;
+  height?: number;
+  autoPlay?: boolean;
+  autoPlayInterval?: number;
+  keyPressControl?: boolean;
+  touchControl?: boolean;
+  infinite?:boolean;
 }
 
-export default Slider
+const Slider: React.FC<SliderProps> = ({
+  children,
+  width = 500,
+  height = 300,
+  ...sliderProps
+}) => {
+
+  const {
+    currentSlide,
+    setCurrentSlide,
+    handleMouseEnter,
+    handleMouseLeave,
+    goToNextSlide,
+    goToPrevSlide,
+    touchStartHandler,
+    touchMoveHandler,
+    touchEndHandler,
+  } = useSlider(sliderProps);
+
+  //Slides
+  const sliderItems = Children.map(children, (child, index) => (
+    <div
+      className={`${classes.slide} ${
+        index === currentSlide ? classes.active : ""
+      }`}
+    >
+      {child}
+    </div>
+  ));
+
+  //Indicators
+  const sliderIndicators = Children.map(children, (_, i) => (
+    <li>
+      <button
+        key={i}
+        className={
+          currentSlide === i
+            ? classes.indicator
+            : `${classes.indicator} ${classes.indicatorInactive}`
+        }
+        onClick={() => {
+          setCurrentSlide(i);
+        }}
+      ></button>
+    </li>
+  ));
+
+  return (
+    <div className={classes.sliderContainer}>
+      <div className={classes.LeftArrow} onClick={goToPrevSlide}>
+        ❰
+      </div>
+
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={classes.slider}
+        style={{
+          transform: `translateX(-${currentSlide * width}px)`,
+          width,
+          height,
+        }}
+        onTouchStart={(e) => touchStartHandler(e)}
+        onTouchMove={(e) => touchMoveHandler(e)}
+        onTouchEnd={() => touchEndHandler()}
+      >
+        {sliderItems}
+      </div>
+      <div className={classes.RightArrow} onClick={goToNextSlide}>
+        ❱
+      </div>
+
+      <ul className={classes.indicators}>{sliderIndicators}</ul>
+    </div>
+  );
+};
+
+export default Slider;
