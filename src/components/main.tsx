@@ -13,6 +13,12 @@ const Main: React.FC<MainProps> = () => {
     "https://api.thedogapi.com/v1/images/search",
   ];
 
+  const slides = [
+    { id: 1, content: <div style={{border:'1px solid black'}}>Slide 1 Content</div> },
+    { id: 2, content: <div  style={{border:'1px solid black'}}>Slide 2 Content</div> },
+    { id: 3, content: <div style={{border:'1px solid black'}}>Slide 3 Content</div> },
+  ];
+
   const { data, loading, error } = useApi(apiUrls);
 
   if (loading) {
@@ -26,11 +32,19 @@ const Main: React.FC<MainProps> = () => {
 
   return (
     <main className="main">
-      <Slider sliderLength={data?.length}>
+      <Slider 
+      sliderLength={data?.length}
+      width={600}
+      height={400}
+      autoPlay
+      autoPlayInterval={3000}
+      keyPressControl={true}
+      infinite
+      >
         {data?.map(item => {
           return(
             <React.Fragment key={item.id}>
-              <img src={item.url} alt={item.id} />
+              <img src={item.url} />
             </React.Fragment>
           )
         })}
